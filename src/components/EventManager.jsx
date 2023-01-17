@@ -4,6 +4,7 @@ import LoginComponent from './loginpage/LoginComponent'
 import LogoutComponent from './logoutpage/LogoutComponent'
 import WelcomeComponent from './welcomepage/WelcomeComponent'
 import AuthProvider, { useAuth } from './security/AuthContext'
+import ErrorComponent from './commonelements/ErrorComponent'
 
 function AuthenticatedRoute({children}){
     const authContext = useAuth()
@@ -23,6 +24,7 @@ export default function EventManager(){
                     <Route path="/" element={<WelcomeComponent/>}/>
                     <Route path='/login' element={<LoginComponent/>}/>
                     <Route path='/logout' element={<LogoutComponent/>}/>
+                    <Route path='*' element={<ErrorComponent/>}/>
                 </Routes>
             </BrowserRouter>
             </AuthProvider>
