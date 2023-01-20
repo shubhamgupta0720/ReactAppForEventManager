@@ -1,12 +1,22 @@
-import { Link, useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { getAllEventsApi } from '../apiservices/eventsapi/GetAllEvents';
 import { useAuth } from '../security/AuthContext'
 
 export default function HeaderComponent(){
     const authContext = useAuth()
     const isAuthenticated = authContext.isAuthenticated;
     const username = authContext.username
-    function Logout(){
-        authContext.logout()
+    function callAllEventsApi(){
+        getAllEventsApi()
+        .then((response) => successfulResponse(response))
+        .catch((error) => errorResponse(error))
+        .finally(() =>  console.log('cleanup'))
+    }
+    function successfulResponse(response){
+        console.log(response)
+    }
+    function errorResponse(response){
+        console.log(response)
     }
     return(
         <header className="border-bottom border-light border-5 mb-5 p-2">
@@ -19,14 +29,14 @@ export default function HeaderComponent(){
                             <li className="nav-item fs-5">
                                 <Link className="nav-link" to="">Home</Link></li>
                             <li className="nav-item fs-5">
-                                <Link className="nav-link" to="">Events</Link></li>
+                                {isAuthenticated && <Link className="nav-link" to="/events" onClick={callAllEventsApi}>Events</Link>}</li>
                         </ul>
                     </div>
                     <ul className="navbar-nav">
                         <li className="nav-item fs-5">
                             {!isAuthenticated && <Link className="nav-link" to="/login">Login</Link>}</li>
                         <li className="nav-item fs-5">
-                            {isAuthenticated && <Link className="nav-link" to="">Welcome {username}</Link>}</li>
+                            {isAuthenticated && <Link className="nav-link" to="/profile">Welcome {username}</Link>}</li>
                         <li className="nav-item fs-5">
                             {isAuthenticated && <Link className="nav-link" to="/logout">Logout</Link>}</li>
                     </ul>
