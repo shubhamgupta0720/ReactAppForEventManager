@@ -5,6 +5,8 @@ import { useNavigate, useParams } from "react-router-dom"
 import { getEventApi } from "../apiservices/eventsapi/GetEventApi"
 import { updateEventApi } from "../apiservices/eventsapi/UpdateEventApi"
 import { createEventApi } from "../apiservices/eventsapi/CreateEventApi"
+import { useAuth } from "../security/AuthContext"
+
 export default function UpdateComponent(){
     
     const {eventId} = useParams()
@@ -13,6 +15,9 @@ export default function UpdateComponent(){
     const [title, setTitle] = useState('')
     const [content, setContent] = useState('')
     const [dateOfEvent, setDateOfEvent] = useState('')
+
+    const authContext = useAuth()
+    const orgId = authContext.orgId
 
     useEffect(
         () => getEvent(), [eventId]
@@ -40,11 +45,12 @@ export default function UpdateComponent(){
             
         }
         if(eventId == -1){
-            createEventApi(event)
+            createEventApi(event, orgId)
             .then(response => {
                 navigate('/events')
             })
             .catch(error => console.log(error))
+            console.log(orgId)
         }
         else{
             updateEventApi(eventId, event)
@@ -76,7 +82,7 @@ export default function UpdateComponent(){
 
     return (
         <div className="container">
-            <h1>Enter todo details</h1>
+            <h1>Enter Event details</h1>
             <div>
                 <Formik initialValues={{title, content, dateOfEvent}} enableReinitialize={true} onSubmit = {onSubmit} validate = {validate} validateOnBlur = {false} validateOnChange = {false}>
                     {

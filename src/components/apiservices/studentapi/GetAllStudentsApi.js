@@ -6,4 +6,4 @@ const apiClient = axios.create(
     }
 )
 
-export const createEventApi = (event, orgId) => apiClient.post(`/api/events/organiser/${orgId}/eventadd`, event)
+export const getAllStudentsApi = () => apiClient.get('/api/students/')

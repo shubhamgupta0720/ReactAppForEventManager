@@ -6,6 +6,7 @@ export default function HeaderComponent(){
     const authContext = useAuth()
     const isAuthenticated = authContext.isAuthenticated;
     const username = authContext.username
+    const isAdmin = authContext.admin
     function callAllEventsApi(){
         getAllEventsApi()
         .then((response) => successfulResponse(response))

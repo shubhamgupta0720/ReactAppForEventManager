@@ -8,6 +8,7 @@ import AuthProvider, { useAuth } from './security/AuthContext'
 import ErrorComponent from './commonelements/ErrorComponent'
 import ProfileComponent from './profilepage/ProfileComponent'
 import UpdateEventComponent from './editeventpage/UpdateEventComponent'
+import RegistrationComponent from './registerpage/RegistrationComponent'
 
 function AuthenticatedRoute({children}){
     const authContext = useAuth()
@@ -32,6 +33,10 @@ export default function EventManager(){
                     <Route path='/events/:eventId' element={
                         <AuthenticatedRoute>
                     <UpdateEventComponent/>
+                    </AuthenticatedRoute>}/>
+                    <Route path='/registration/:eventId' element={
+                        <AuthenticatedRoute>
+                    <RegistrationComponent/>
                     </AuthenticatedRoute>}/>
                     <Route path='/profile' element={<ProfileComponent/>}/>
                     <Route path='/login' element={<LoginComponent/>}/>

@@ -5,7 +5,8 @@ import { useAuth } from "../security/AuthContext"
 export default function LoginComponent(){
     
     const [username, setUsername] = useState("Shubham")
-    const [password, setPassword] = useState("Password")
+    const [password, setPassword] = useState("Gupta")
+    const [admin, setAdmin] = useState(false)
     const [showErrorMessage, setshowErrorMessage] = useState(false)
     const navigate = useNavigate();
     const authContext = useAuth();
@@ -18,8 +19,13 @@ export default function LoginComponent(){
         setPassword(event.target.value)
     }
 
+    function handleAdminCheckFunction(){
+        var isAdmin = document.getElementById("isAdmin").checked
+        setAdmin(isAdmin)
+    }
+
     function handleSubmitFunction(){
-        if(authContext.login(username, password)){
+        if(authContext.login(username, password, admin)){
             navigate('/')
         }
         else{
@@ -41,6 +47,10 @@ export default function LoginComponent(){
                 <div>
                     <label>Password</label>
                     <input type="password" name="password" defaultValue={password} onChange={handlePasswordFunction}/>
+                </div>
+                <div>
+                <label>Admin Login</label>
+                    <input type="checkbox" name="isAdmin" id="isAdmin" onClick={handleAdminCheckFunction}></input>
                 </div>
                 <div>
                     <button type="button" name="Login" onClick={handleSubmitFunction}>Login</button>
