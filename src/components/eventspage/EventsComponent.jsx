@@ -4,17 +4,24 @@ import { useNavigate } from "react-router-dom"
 import { deleteEventApi } from "../apiservices/eventsapi/DeleteEvent"
 import { getAllEventsApi } from "../apiservices/eventsapi/GetAllEvents"
 import { createRegistrationApi } from "../apiservices/registrationapi/CreateRegistrationApi"
+import { getRegistrationByStudentApi } from "../apiservices/registrationapi/GetRegistrationByStudentApi"
 import { useAuth } from "../security/AuthContext"
 
 export default function EventsComponent(){
 
     const navigate = useNavigate()
     const authContext = useAuth()
+    const username = authContext.username
     const isAdmin = authContext.admin
     const stdId = authContext.stdId
+    const orgId = authContext.orgId
     
     const [events, setEvents] = useState([])
+    const [stdRegs, setStdRegs] = useState([])
     const[message, setMessage] = useState(null)
+    const [orgToggle, setOrgToggle] = useState(false)
+
+    var newEvents = []
 
     useEffect(
         () => refreshEvents(), []
@@ -27,6 +34,14 @@ export default function EventsComponent(){
         }
         )
         .catch(error => console.log(error))
+
+        // getRegistrationByStudentApi(stdId)
+        // .then(
+        //     response => {
+        //         setStdRegs(response.data)
+        //         refreshEvents()
+        //     }
+        // ).catch(error => console.log(error))
     }
 
     function updateEvent(eventId){
@@ -45,7 +60,7 @@ export default function EventsComponent(){
     }
 
     function registerEvent(eventId, stdId){
-        console.log("here")
+
         const registration = {
             
         }
@@ -60,10 +75,45 @@ export default function EventsComponent(){
     function createEvent(){
         navigate('/events/-1')
     }
+
+    function goToRegistrations(eventId){
+        navigate(`/viewregistrations/${eventId}`)
+    }
+
+    function handleOrgToggleSwitch(){
+        var orgToggle = document.getElementById("switch").checked
+        setOrgToggle(orgToggle)
+        if(orgToggle){
+            newEvents = events.filter(getAllOrgCreatedEvents)
+            setEvents(newEvents)
+        }
+        else{
+            refreshEvents()
+        }
+    }
+
+    function getAllOrgCreatedEvents(event){
+        if(event.organiser.orgId === orgId){
+            return true
+        }
+        return false
+    }
+
+    function checkIfAlreadyRegistered(){
+
+    }
     
     return (
         <div className="container">
-            <h1>All Events</h1>
+            <h1>Events Page</h1>
+            {isAdmin && <div className="container">
+                <label>All &nbsp; </label>
+                <label className="switch">
+                    <input type="checkbox" id="switch" onChange={handleOrgToggleSwitch}/>
+                    <span className="slider round"></span>
+                </label>
+                <label>&nbsp; {username}</label>
+            </div>}
             {message && <div className="alert alert-warning">{message}</div>}
             <div>
                 <table className='table'>
@@ -72,10 +122,11 @@ export default function EventsComponent(){
                             <th>Event Id</th>
                             <th>Title</th>
                             <th>Content</th>
+                            <th>Organiser</th>
                             <th>Date of Event</th>
+                            {isAdmin && <th>Registrations</th>}
                             {isAdmin && <th>Update</th>}
                             {isAdmin && <th>Delete</th> }
-                            {isAdmin && <th>Registrations</th>}
                             {!isAdmin && <th>Register</th> }
                         </tr>
                     </thead>
@@ -87,10 +138,11 @@ export default function EventsComponent(){
                                 <td>{event.eventId}</td>
                                 <td>{event.title}</td>
                                 <td>{event.content}</td>
+                                <td>{event.organiser.orgName}</td>
                                 <td>{event.dateOfEvent.toString()}</td>
-                                {isAdmin && <td><button className="btn btn-primary" onClick={() => updateEvent(event.eventId)}>Update</button></td>}
-                                {isAdmin && <td><button className="btn btn-danger" onClick={() => deleteEvent(event.eventId)}>Delete</button></td>}
-                                {isAdmin && <td><button className="btn btn-warning">View Registrations</button></td>}
+                                {isAdmin && <td><button className="btn btn-warning" onClick={() => goToRegistrations(event.eventId)} >View Registrations</button></td>}
+                                {isAdmin && (orgId === event.organiser.orgId) && <td><button className="btn btn-primary" onClick={() => updateEvent(event.eventId)}>Update</button></td>}
+                                {isAdmin && (orgId === event.organiser.orgId) && <td><button className="btn btn-danger" onClick={() => deleteEvent(event.eventId)}>Delete</button></td>}
                                 {!isAdmin && <td><button className="btn btn-warning" onClick={() => registerEvent(event.eventId, stdId)} >Register</button></td>}
                             </tr>
                                 )
