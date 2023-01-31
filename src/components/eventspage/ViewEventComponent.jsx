@@ -1,8 +1,9 @@
 import { useEffect } from "react"
 import { useState } from "react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { getEventApi } from "../apiservices/eventsapi/GetEventApi"
 import { createRegistrationApi } from "../apiservices/registrationapi/CreateRegistrationApi"
+import { deleteRegistrationByEventAndStudentApi } from "../apiservices/registrationapi/DeleteRegistrationByEventAndStudentIdApi"
 import { getRegistrationByEventAndStudentApi } from "../apiservices/registrationapi/GetRegistrationByEventAndStudentApi"
 import { useAuth } from "../security/AuthContext"
 
@@ -15,6 +16,7 @@ export default function ViewEventComponent(){
     const [orgEmail, setOrgEmail] = useState('')
     const [alreadyRegistered, setAlreadyRegistered] = useState(false)
 
+    const navigate = useNavigate()
     const authContext = useAuth()
     const stdId = authContext.stdId
 
@@ -39,18 +41,32 @@ export default function ViewEventComponent(){
                 setOrgEmail(response.data.organiser.orgEmail)
             })
             .catch(error => console.log(error))
-}
-    function registerEvent(eventId, stdId){
+    }
 
-        const registration = {
+    function confirmRegistrationPage(eventId){
+        navigate(`/registration/${eventId}`)
+    }
+    // function registerEvent(eventId, stdId){
+
+    //     const registration = {
             
+    //     }
+    //     createRegistrationApi(registration, eventId, stdId).then(
+    //         () => {
+    //             setMessage("Registered for event " + eventId)
+    //             getResponseIfRegistered(eventId, stdId)
+    //         }
+    //     ).catch(error => console.log(error.message))
+    // }
+
+    function cancelRegistration(eventId, stdId){
+        deleteRegistrationByEventAndStudentApi(eventId, stdId)
+        .then(() => {
+            setMessage("Cancelled Registration for event " + eventId)
+            getResponseIfRegistered(eventId, stdId)
         }
-        createRegistrationApi(registration, eventId, stdId).then(
-            () => {
-                setMessage("Registered for event " + eventId)
-                getResponseIfRegistered(eventId, stdId)
-            }
-        ).catch(error => console.log(error.message))
+        )
+        .catch(error => console.log(error))
     }
 
     function getResponseIfRegistered(eventId, stdId){
@@ -58,7 +74,10 @@ export default function ViewEventComponent(){
         .then(() => {
             setAlreadyRegistered(true)
         })
-        .catch(error => console.log(error))
+        .catch(error => {
+            console.log(error)
+            setAlreadyRegistered(false)
+        })
     }
 
     return (
@@ -68,14 +87,8 @@ export default function ViewEventComponent(){
             <div className="container">{content}</div>
             <div className="container">{dateOfEvent}</div>
             <div className="container">{orgName}</div>
-            {!alreadyRegistered && <div className="container"><button className="btn btn-warning" onClick={() => registerEvent(eventId, stdId)}>Register</button></div>}
-            {alreadyRegistered && <div className="container"><button className="btn btn-warning">Cancel Registration</button></div>}
-            {/* {(alreadyRegistered == true) &&
-                <div className="container"><button className="btn btn-warning" onClick={() => registerEvent(eventId, stdId)}>Register</button></div>
-            }
-            {(alreadyRegistered == true) &&
-                <div className="container"><button className="btn btn-success">Already Registered</button></div>
-            } */}
+            {!alreadyRegistered && <div className="container"><button className="btn btn-warning" onClick={() => confirmRegistrationPage(eventId)}>Register</button></div>}
+            {alreadyRegistered && <div className="container"><button className="btn btn-secondary" onClick={() => cancelRegistration(eventId, stdId)}>Cancel Registration</button></div>}
             <div className="container"><button className="btn btn-danger">Contact Organiser</button></div>
         </div>
     )

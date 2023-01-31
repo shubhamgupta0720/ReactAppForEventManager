@@ -24,6 +24,7 @@ export default function EventsComponent(){
     const [orgToggle, setOrgToggle] = useState(false)
 
     var newEvents = []
+    var key = ""
 
     useEffect(
         () => 
@@ -62,17 +63,7 @@ export default function EventsComponent(){
         navigate(`/viewregistrations/${eventId}`)
     }
 
-    // function getAllStudentRegs(stdId){
-    //     getRegistrationByStudentApi(stdId)
-    //     .then(response => {
-    //         setStdRegs(response.data)
-    //     })
-    //     .catch(error => console.log(error))
-    // }
-
-    function goToEventDetails(eventId, stdId){
-        // getResponseIfRegistered(eventId, stdId)
-        // getAllStudentRegs(stdId)
+    function goToEventDetails(eventId){
         navigate(`/vieweventdetails/${eventId}`)
     }
 
@@ -94,10 +85,31 @@ export default function EventsComponent(){
         }
         return false
     }
+
+    function searchUsingKeywords(){
+        key = document.getElementById("keyword").value
+        if(key.length > 0){
+            newEvents = events.filter(getAllKeywordEvents)
+            setEvents(newEvents)
+        }
+        else {
+            refreshEvents()
+        }
+    }
+
+    function getAllKeywordEvents(event){
+        if(event.title.toLowerCase().includes(key.toLowerCase())){
+            return true
+        }
+        return false
+    }
     
     return (
         <div className="container">
             <h1>Events Page</h1>
+            <div>
+                <input type="text" id="keyword" onChange={searchUsingKeywords}/>
+            </div>
             {isAdmin && <div className="container">
                 <label>All &nbsp; </label>
                 <label className="switch">
@@ -135,7 +147,7 @@ export default function EventsComponent(){
                                 {isAdmin && <td><button className="btn btn-warning" onClick={() => goToRegistrations(event.eventId)} >View Registrations</button></td>}
                                 {isAdmin && (orgId === event.organiser.orgId) && <td><button className="btn btn-primary" onClick={() => updateEvent(event.eventId)}>Update</button></td>}
                                 {isAdmin && (orgId === event.organiser.orgId) && <td><button className="btn btn-danger" onClick={() => deleteEvent(event.eventId)}>Delete</button></td>}
-                                {!isAdmin && <td><button className="btn btn-success" onClick={() => goToEventDetails(event.eventId, stdId)} >View Event Details</button></td>}
+                                {!isAdmin && <td><button className="btn btn-success" onClick={() => goToEventDetails(event.eventId)} >View Event Details</button></td>}
                             </tr>
                                 )
                             )

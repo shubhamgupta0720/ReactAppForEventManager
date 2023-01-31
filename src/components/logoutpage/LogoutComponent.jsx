@@ -1,5 +1,5 @@
 import { useAuth } from '../security/AuthContext'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 export default function LogoutComponent(){
     const authContext = useAuth()
