@@ -4,8 +4,10 @@ import { useNavigate } from "react-router-dom"
 import { deleteEventApi } from "../apiservices/eventsapi/DeleteEvent"
 import { getAllEventsApi } from "../apiservices/eventsapi/GetAllEvents"
 import { createRegistrationApi } from "../apiservices/registrationapi/CreateRegistrationApi"
-import { getRegistrationByStudentApi } from "../apiservices/registrationapi/GetRegistrationByStudentApi"
+import { Link } from 'react-router-dom'
 import { useAuth } from "../security/AuthContext"
+import { getRegistrationByEventAndStudentApi } from "../apiservices/registrationapi/GetRegistrationByEventAndStudentApi"
+import { getRegistrationByStudentApi } from "../apiservices/registrationapi/GetRegistrationByStudentApi"
 
 export default function EventsComponent(){
 
@@ -17,14 +19,15 @@ export default function EventsComponent(){
     const orgId = authContext.orgId
     
     const [events, setEvents] = useState([])
-    const [stdRegs, setStdRegs] = useState([])
-    const[message, setMessage] = useState(null)
+    const [message, setMessage] = useState(null)
+
     const [orgToggle, setOrgToggle] = useState(false)
 
     var newEvents = []
 
     useEffect(
-        () => refreshEvents(), []
+        () => 
+            refreshEvents(), []
     )
     
     function refreshEvents(){
@@ -34,14 +37,6 @@ export default function EventsComponent(){
         }
         )
         .catch(error => console.log(error))
-
-        // getRegistrationByStudentApi(stdId)
-        // .then(
-        //     response => {
-        //         setStdRegs(response.data)
-        //         refreshEvents()
-        //     }
-        // ).catch(error => console.log(error))
     }
 
     function updateEvent(eventId){
@@ -59,25 +54,26 @@ export default function EventsComponent(){
         ).catch(error => console.log(error))
     }
 
-    function registerEvent(eventId, stdId){
-
-        const registration = {
-            
-        }
-        createRegistrationApi(registration, eventId, stdId).then(
-            () => {
-                setMessage("Registered for event " + eventId)
-                refreshEvents()
-            }
-        ).catch(error => console.log(error))
-    }
-
     function createEvent(){
         navigate('/events/-1')
     }
 
     function goToRegistrations(eventId){
         navigate(`/viewregistrations/${eventId}`)
+    }
+
+    // function getAllStudentRegs(stdId){
+    //     getRegistrationByStudentApi(stdId)
+    //     .then(response => {
+    //         setStdRegs(response.data)
+    //     })
+    //     .catch(error => console.log(error))
+    // }
+
+    function goToEventDetails(eventId, stdId){
+        // getResponseIfRegistered(eventId, stdId)
+        // getAllStudentRegs(stdId)
+        navigate(`/vieweventdetails/${eventId}`)
     }
 
     function handleOrgToggleSwitch(){
@@ -97,10 +93,6 @@ export default function EventsComponent(){
             return true
         }
         return false
-    }
-
-    function checkIfAlreadyRegistered(){
-
     }
     
     return (
@@ -136,14 +128,14 @@ export default function EventsComponent(){
                                 event => (
                                         <tr key={event.eventId}>
                                 <td>{event.eventId}</td>
-                                <td>{event.title}</td>
+                                <td><Link className="nav-link" to={`/vieweventdetails/${event.eventId}`}>{event.title}</Link></td>
                                 <td>{event.content}</td>
                                 <td>{event.organiser.orgName}</td>
                                 <td>{event.dateOfEvent.toString()}</td>
                                 {isAdmin && <td><button className="btn btn-warning" onClick={() => goToRegistrations(event.eventId)} >View Registrations</button></td>}
                                 {isAdmin && (orgId === event.organiser.orgId) && <td><button className="btn btn-primary" onClick={() => updateEvent(event.eventId)}>Update</button></td>}
                                 {isAdmin && (orgId === event.organiser.orgId) && <td><button className="btn btn-danger" onClick={() => deleteEvent(event.eventId)}>Delete</button></td>}
-                                {!isAdmin && <td><button className="btn btn-warning" onClick={() => registerEvent(event.eventId, stdId)} >Register</button></td>}
+                                {!isAdmin && <td><button className="btn btn-success" onClick={() => goToEventDetails(event.eventId, stdId)} >View Event Details</button></td>}
                             </tr>
                                 )
                             )

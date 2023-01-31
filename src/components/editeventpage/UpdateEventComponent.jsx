@@ -11,7 +11,6 @@ export default function UpdateComponent(){
     
     const {eventId} = useParams()
     const navigate = useNavigate()
-
     const [title, setTitle] = useState('')
     const [content, setContent] = useState('')
     const [dateOfEvent, setDateOfEvent] = useState('')

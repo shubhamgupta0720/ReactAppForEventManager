@@ -47,8 +47,8 @@ export default function ViewRegistrationsComponent(){
                                 reg => (
                                         <tr key={reg.regId}>
                                 <td>{reg.regId}</td>
-                                <td>{reg.event.title}</td>
                                 <td>{reg.student.firstName}</td>
+                                <td>{reg.student.stdId}</td>
                                 <td>{reg.student.dept}</td>
                                 {/* <td>{event.dateOfEvent.toString()}</td>
                                 {isAdmin && <td><button className="btn btn-primary" onClick={() => updateEvent(event.eventId)}>Update</button></td>}

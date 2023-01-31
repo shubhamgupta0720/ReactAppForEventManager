@@ -10,6 +10,7 @@ import ProfileComponent from './profilepage/ProfileComponent'
 import UpdateEventComponent from './editeventpage/UpdateEventComponent'
 import RegistrationComponent from './registerpage/RegistrationComponent'
 import ViewRegistrationsComponent from './registerpage/ViewRegistrationsComponent'
+import ViewEventComponent from './eventspage/ViewEventComponent'
 
 function AuthenticatedRoute({children}){
     const authContext = useAuth()
@@ -42,6 +43,10 @@ export default function EventManager(){
                     <Route path='/viewregistrations/:eventId' element={
                         <AuthenticatedRoute>
                     <ViewRegistrationsComponent/>
+                    </AuthenticatedRoute>}/>
+                    <Route path='/vieweventdetails/:eventId' element={
+                        <AuthenticatedRoute>
+                    <ViewEventComponent/>
                     </AuthenticatedRoute>}/>
                     <Route path='/profile' element={<ProfileComponent/>}/>
                     <Route path='/login' element={<LoginComponent/>}/>
