@@ -46,7 +46,7 @@ export default function UpdateComponent(){
         if(eventId == -1){
             createEventApi(event, orgId)
             .then(response => {
-                navigate('/events')
+                navigate(`/events/status/${"created"}`)
             })
             .catch(error => console.log(error))
             console.log(orgId)
@@ -54,7 +54,7 @@ export default function UpdateComponent(){
         else{
             updateEventApi(eventId, event)
             .then(response => {
-                navigate('/events')
+                navigate(`/events/status/${"updated"}`)
             })
             .catch(error => console.log(error))
         }
@@ -75,7 +75,6 @@ export default function UpdateComponent(){
         if(values.dateOfEvent == null || values.dateOfEvent == ''){
             errors.dateOfEvent = 'Enter a valid date'
         }
-        // console.log(values)
         return errors
     }
 

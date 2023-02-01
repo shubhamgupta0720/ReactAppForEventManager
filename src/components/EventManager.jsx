@@ -11,6 +11,7 @@ import UpdateEventComponent from './editeventpage/UpdateEventComponent'
 import RegistrationComponent from './registerpage/RegistrationComponent'
 import ViewRegistrationsComponent from './registerpage/ViewRegistrationsComponent'
 import ViewEventComponent from './eventspage/ViewEventComponent'
+import SuccessfulCreatedEvent from './createeventpage/SuccessfulCreatedEvent'
 
 function AuthenticatedRoute({children}){
     const authContext = useAuth()
@@ -31,6 +32,10 @@ export default function EventManager(){
                     <Route path='/events' element={
                         <AuthenticatedRoute>
                     <EventsComponent/>
+                    </AuthenticatedRoute>}/>
+                    <Route path='/events/status/:status' element={
+                        <AuthenticatedRoute>
+                    <SuccessfulCreatedEvent/>
                     </AuthenticatedRoute>}/>
                     <Route path='/events/:eventId' element={
                         <AuthenticatedRoute>
