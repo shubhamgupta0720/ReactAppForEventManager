@@ -3,11 +3,8 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { deleteEventApi } from "../apiservices/eventsapi/DeleteEvent"
 import { getAllEventsApi } from "../apiservices/eventsapi/GetAllEvents"
-import { createRegistrationApi } from "../apiservices/registrationapi/CreateRegistrationApi"
 import { Link } from 'react-router-dom'
 import { useAuth } from "../security/AuthContext"
-import { getRegistrationByEventAndStudentApi } from "../apiservices/registrationapi/GetRegistrationByEventAndStudentApi"
-import { getRegistrationByStudentApi } from "../apiservices/registrationapi/GetRegistrationByStudentApi"
 
 export default function EventsComponent(){
 

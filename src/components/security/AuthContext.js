@@ -1,4 +1,5 @@
 import { createContext, useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { getAllOrganisersApi } from "../apiservices/organizerapi/GetAllOrganiserApi";
 import { getAllStudentsApi } from "../apiservices/studentapi/GetAllStudentsApi";
 
@@ -21,6 +22,8 @@ export default function AuthProvider({ children }){
     const [username, setUsername] = useState()
 
     const [admin, setAdmin] = useState(false)
+
+    // const navigate = useNavigate()
 
     useEffect(
         () => refreshData(), []
@@ -55,6 +58,9 @@ export default function AuthProvider({ children }){
                     console.log(orgId)
                     setAuthenticated(true)
                     setAdmin(true)
+                    localStorage.setItem('user', username)
+                    localStorage.setItem('isAdmin', true)
+                    localStorage.setItem('id', organisers[i].orgId)
                     return true
                 }
             }
@@ -71,6 +77,9 @@ export default function AuthProvider({ children }){
                     console.log(stdId)
                     setAuthenticated(true)
                     setAdmin(false)
+                    localStorage.setItem('user', username)
+                    localStorage.setItem('isAdmin', false)
+                    localStorage.setItem('id', students[i].stdId)
                     return true
                 }
             }
@@ -84,7 +93,7 @@ export default function AuthProvider({ children }){
     }
 
     return (
-        <AuthContext.Provider value={ {isAuthenticated, setAuthenticated, login, logout, username, orgId, stdId, admin} }>
+        <AuthContext.Provider value={ {isAuthenticated, setAuthenticated, setUsername, setAdmin, login, logout, username, orgId, setOrgId, stdId, setStdId, admin} }>
             {children}
         </AuthContext.Provider>
     )

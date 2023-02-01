@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from "../security/AuthContext"
 
@@ -10,6 +10,20 @@ export default function LoginComponent(){
     const [showErrorMessage, setshowErrorMessage] = useState(false)
     const navigate = useNavigate();
     const authContext = useAuth();
+
+    useEffect(() => {
+        const loggedInUser = localStorage.getItem("user");
+        const isUserAdmin = localStorage.getItem("isAdmin");
+        if (loggedInUser) {
+          authContext.setUsername(loggedInUser)
+          authContext.setAuthenticated(true)
+          if(isUserAdmin == "true"){
+            authContext.setAdmin(true)
+
+          }
+          navigate('/')
+        }
+      }, []);
 
     function handleUsernameFunction(event){
         setUsername(event.target.value)

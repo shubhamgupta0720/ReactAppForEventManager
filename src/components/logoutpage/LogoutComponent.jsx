@@ -6,6 +6,7 @@ export default function LogoutComponent(){
     const navigate = useNavigate();
     function successLogout(){
         authContext.logout()
+        localStorage.clear()
         navigate('/')
     }
     function unsuccessLogout(){
