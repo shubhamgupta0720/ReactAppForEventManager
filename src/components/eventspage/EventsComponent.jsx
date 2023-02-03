@@ -137,7 +137,8 @@ export default function EventsComponent(){
                                 event => (
                                         <tr key={event.eventId}>
                                 <td>{event.eventId}</td>
-                                <td><Link className="nav-link" to={`/vieweventdetails/${event.eventId}`}>{event.title}</Link></td>
+                                {!isAdmin && <td><Link className="nav-link" to={`/vieweventdetails/${event.eventId}`}>{event.title}</Link></td>}
+                                {isAdmin && <td>{event.title}</td>}
                                 <td>{event.content}</td>
                                 <td>{event.organiser.orgName}</td>
                                 <td>{event.dateOfEvent.toString()}</td>

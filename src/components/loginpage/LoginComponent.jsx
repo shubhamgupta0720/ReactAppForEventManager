@@ -54,6 +54,7 @@ export default function LoginComponent(){
             {false && "name" will give false} */}
             {showErrorMessage && <div className='failureMessage'>Authentication Failed</div>}
             <div className="LoginForm">
+                <h1 id="loginpageheader">Login Page</h1>
                 <div>
                     <label>User Name</label>
                     <input type="text" name="username" defaultValue={username} onChange={handleUsernameFunction} />
